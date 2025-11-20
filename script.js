@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (type === 'QTextEdit') {
             el = document.createElement('textarea'); 
             el.rows = 5; 
-            el.value = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n\nEditando texto multilínea...';
+            el.value = 'El diseño es el arte de permitir que la interfaz respire con la misma fluidez con la que evoluciona la idea que la inspira...';
         } 
         else if (type === 'QTableWidget') {
             // CREACIÓN DE LA TABLA CON LOS CAMPOS SOLICITADOS
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
         els.previewBadge.innerText = state.charAt(0).toUpperCase() + state.slice(1);
     }
 
-    // --- GENERATE OUTPUT (HEX ONLY) ---
+// --- GENERATE OUTPUT (HEX ONLY & CLEAN FORMAT) ---
     function updateOutput() {
         let css = '';
         let qss = '';
@@ -252,42 +252,72 @@ document.addEventListener('DOMContentLoaded', () => {
         const maps = {
             normal: { css: '', qss: '' },
             hover: { css: ':hover', qss: ':hover' },
-            pressed: { css: ':active', qss: ':pressed' }
+            pressed: { css: ':active', qss: ':pressed' } // CSS usa :active, Qt usa :pressed
         };
 
         ['normal', 'hover', 'pressed'].forEach(st => {
             const data = appState.styles[st];
-            let props = [];
-            let qssPropsList = [];
+            let cssProps = []; // Array para CSS (Vista previa)
+            let qssProps = []; // Array para QSS (Código final)
 
+            // 1. MANEJO DE BORDE (SHORTHAND)
+            // Detectamos si hay configuración de borde
+            const bWidth = data['border-width'];
+            const bColor = data['border-color'];
+
+            if (bWidth.enabled || bColor.enabled) {
+                // Usamos los valores actuales (aunque uno esté deshabilitado, lo necesitamos para el shorthand)
+                const wVal = bWidth.value + 'px';
+                const cVal = bColor.value;
+                
+                // Creamos la propiedad abreviada: border: 6px solid #RRGGBB;
+                const borderShort = `${wVal} solid ${cVal}`;
+
+                cssProps.push(`border: ${borderShort};`);
+                qssProps.push(`border: ${borderShort};`);
+            }
+
+            // 2. RESTO DE PROPIEDADES
             Object.keys(data).forEach(prop => {
+                // Ignoramos las propiedades de borde individuales porque ya las tratamos arriba
+                if (prop === 'border-width' || prop === 'border-color') return;
+
                 if (data[prop].enabled) {
                     let val = data[prop].value;
                     let conf = propsMap[prop];
 
-                    // Unit appending
+                    // Unidades
                     if (conf.type === 'px') val += 'px';
                     
-                    // Font fallback for CSS
+                    // CSS Fallback para fuentes
                     let cssVal = val;
                     if (prop === 'font-family') cssVal = `${val}, sans-serif`;
 
-                    props.push(`${prop}: ${cssVal};`);
-                    qssPropsList.push(`${prop}: ${val};`);
+                    cssProps.push(`${prop}: ${cssVal};`);
+                    qssProps.push(`${prop}: ${val};`); // En QSS va limpio
                 }
             });
 
-            if (props.length > 0) {
+            // 3. CONSTRUCCIÓN DEL CÓDIGO
+            if (cssProps.length > 0) {
+                // A. CSS para la vista previa (Minificado está bien aquí)
                 const selector = '#sim-el' + maps[st].css;
-                css += `${selector} { ${props.join(' ')} }\n`;
+                css += `${selector} { ${cssProps.join(' ')} }\n`;
 
+                // B. QSS para el panel de código (FORMATO LIMPIO)
                 const qssSel = appState.widget + maps[st].qss;
-                qss += `${qssSel} {\n    ${qssPropsList.join('\n    ')}\n}\n`;
+                
+                // Usamos template literals con saltos de línea reales
+                qss += `${qssSel} {\n`;
+                // Unimos las propiedades con salto de línea real + 4 espacios de indentación
+                qss += `    ${qssProps.join('\n    ')}\n`;
+                qss += `}\n\n`;
             }
         });
 
         els.styleTag.textContent = css;
-        els.qssOutput.textContent = qss || '/* Selecciona atributos para generar código... */';
+        // Si qss está vacío, mostrar mensaje de ayuda
+        els.qssOutput.textContent = qss || '/* Ajusta los controles para generar código... */';
     }
 
     // --- MAGIC WAND (HEX HARMONY) ---
