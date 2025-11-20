@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QSS Studio v5 | HEX Edition</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="brand">
+            <span class="logo-icon">💠</span>
+            <div class="brand-info">
+                <h1>QSS Studio</h1>
+                <span class="version-badge">HEX ONLY</span>
+            </div>
+        </div>
+        <div class="actions">
+            <button id="themeToggle" class="btn-icon" title="Alternar tema (Claro/Oscuro)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            </button>
+            <button id="magicBtn" class="btn-magic">
+                <span class="icon">✨</span> Varita Mágica
+            </button>
+        </div>
+    </nav>
+
+    <div class="layout">
+        
+        <aside class="sidebar">
+            
+            <div class="panel-section">
+                <label class="section-label">Componente Qt</label>
+                <div class="select-wrapper">
+                    <select id="widgetSelector">
+                        <optgroup label="Controles Básicos">
+                            <option value="QPushButton">QPushButton</option>
+                            <option value="QLabel">QLabel</option>
+                            <option value="QLineEdit">QLineEdit</option>
+                            <option value="QCheckBox">QCheckBox</option>
+                            <option value="QRadioButton">QRadioButton</option>
+                        </optgroup>
+                        <optgroup label="Contenedores & Datos">
+                            <option value="QGroupBox">QGroupBox</option>
+                            <option value="QComboBox">QComboBox</option>
+                            <option value="QProgressBar">QProgressBar</option>
+                            <option value="QTextEdit">QTextEdit</option>
+                            <option value="QTableWidget">QTableWidget</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
+            <div class="panel-section sticky-top">
+                <label class="section-label">Estado del Componente</label>
+                <div class="state-tabs">
+                    <button class="tab active" data-state="normal">Normal</button>
+                    <button class="tab" data-state="hover">Hover</button>
+                    <button class="tab" data-state="pressed">Pressed</button>
+                </div>
+            </div>
+
+            <div class="scroll-container">
+                
+                <details open class="control-group">
+                    <summary>Apariencia & Color</summary>
+                    <div class="group-content">
+                        
+                        <div class="control-row">
+                            <div class="check-wrapper">
+                                <input type="checkbox" id="check_bg" data-prop="background-color">
+                                <label for="check_bg">Fondo</label>
+                            </div>
+                            <div class="hex-picker-group">
+                                <input type="color" id="bg_picker" value="#333333">
+                                <input type="text" id="bg_hex" value="#333333" maxlength="7" spellcheck="false">
+                            </div>
+                        </div>
+
+                        <div class="control-row">
+                            <div class="check-wrapper">
+                                <input type="checkbox" id="check_text" data-prop="color">
+                                <label for="check_text">Texto</label>
+                            </div>
+                            <div class="hex-picker-group">
+                                <input type="color" id="text_picker" value="#ffffff">
+                                <input type="text" id="text_hex" value="#ffffff" maxlength="7" spellcheck="false">
+                            </div>
+                        </div>
+
+                    </div>
+                </details>
+
+                <details open class="control-group">
+                    <summary>Bordes & Geometría</summary>
+                    <div class="group-content">
+                        
+                        <div class="control-row">
+                            <div class="check-wrapper">
+                                <input type="checkbox" id="check_border_col" data-prop="border-color">
+                                <label for="check_border_col">Color Borde</label>
+                            </div>
+                            <div class="hex-picker-group">
+                                <input type="color" id="border_col_picker" value="#555555">
+                                <input type="text" id="border_col_hex" value="#555555" maxlength="7" spellcheck="false">
+                            </div>
+                        </div>
+
+                        <div class="control-row">
+                            <div class="check-wrapper">
+                                <input type="checkbox" id="check_border_width" data-prop="border-width">
+                                <label for="check_border_width">Grosor</label>
+                            </div>
+                            <div class="slider-group">
+                                <input type="range" id="border_width" min="0" max="10" value="1">
+                                <span class="val-badge" id="disp_border_width">1px</span>
+                            </div>
+                        </div>
+
+                        <div class="control-row">
+                            <div class="check-wrapper">
+                                <input type="checkbox" id="check_radius" data-prop="border-radius">
+                                <label for="check_radius">Radio (Curva)</label>
+                            </div>
+                            <div class="slider-group">
+                                <input type="range" id="border_radius" min="0" max="30" value="4">
+                                <span class="val-badge" id="disp_border_radius">4px</span>
+                            </div>
+                        </div>
+
+                        <div class="control-row">
+                            <div class="check-wrapper">
+                                <input type="checkbox" id="check_padding" data-prop="padding">
+                                <label for="check_padding">Relleno (Padding)</label>
+                            </div>
+                            <div class="slider-group">
+                                <input type="range" id="padding" min="0" max="40" value="6">
+                                <span class="val-badge" id="disp_padding">6px</span>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <details open class="control-group">
+                    <summary>Tipografía</summary>
+                    <div class="group-content">
+                        
+                        <div class="control-row">
+                            <div class="check-wrapper">
+                                <input type="checkbox" id="check_font_family" data-prop="font-family">
+                                <label for="check_font_family">Fuente</label>
+                            </div>
+                            <select id="font_family" class="std-select">
+                                <option value="Arial">Arial</option>
+                                <option value="'Segoe UI'">Segoe UI</option>
+                                <option value="'Roboto'">Roboto</option>
+                                <option value="'Verdana'">Verdana</option>
+                                <option value="'Consolas'">Consolas (Mono)</option>
+                            </select>
+                        </div>
+
+                        <div class="control-row">
+                            <div class="check-wrapper">
+                                <input type="checkbox" id="check_font_size" data-prop="font-size">
+                                <label for="check_font_size">Tamaño</label>
+                            </div>
+                            <div class="slider-group">
+                                <input type="range" id="font_size" min="8" max="36" value="14">
+                                <span class="val-badge" id="disp_font_size">14px</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </details>
+
+            </div>
+        </aside>
+
+        <main class="workspace">
+            
+            <section class="preview-panel">
+                <div class="panel-header">
+                    <span class="header-title">VISTA PREVIA</span>
+                    <span class="state-badge" id="previewBadge">Normal</span>
+                </div>
+                <div class="preview-canvas">
+                    <div id="previewStage">
+                        </div>
+                </div>
+            </section>
+
+            <section class="code-panel">
+                <div class="panel-header">
+                    <span class="header-title">CÓDIGO QSS GENERADO</span>
+                    <div class="code-actions">
+                        <span class="status-msg" id="copyStatus"></span>
+                        <button id="copyBtn" class="btn-primary">Copiar Código</button>
+                    </div>
+                </div>
+                <div class="code-editor-container">
+                    <pre><code id="qssOutput">/* Ajusta los controles a la izquierda para generar el estilo... */</code></pre>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <style id="dynamic-style"></style>
+
+    <script src="script.js"></script>
+</body>
+</html>
